@@ -1,0 +1,24 @@
+[package]
+name = "ui-png-parser"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "mylib"
+crate-type = ["cdylib"]
+
+[dependencies]
+image = "0.24"
+
+[profile.release]
+panic = "abort"     # abort immediately rather than unwind, removes need for extra unwinding code; smaller binary
+strip = "symbols"   # remove symbols from binary; smaller binary
+opt-level = 'z'     # z is for smallest possible binary including no loop vectorization, 3 is most speed, 0 for faster compilation
+codegen-units = 1   # Reduce Parallel Code Generation Units to Increase Optimization
+lto = true          # longer compile time, more optimization
+incremental = false # recompile fully to ensure optimizations
+
+# Compile build-dependencies in release mode with more optimized than default
+[profile.release.build-override]
+opt-level = 'z'
+codegen-units = 1
